@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Source Viewer</title>
+    <style>
+        #copyButton {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #copyButton:hover {
+            background-color:         #copyButton {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #4CAF50;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Website Source Viewer</h1>
+    <label for="websiteInput">Enter Website URL:</label>
+    <input type="text" id="websiteInput" placeholder="https://example.com">
+    <button onclick="fetchSource()">View Source</button>
+    
+    <button id="copyButton" onclick="copySource()">Copy</button>
+    <pre id="sourceDisplay"></pre>
+    
+    <script>
+        async function fetchSource() {
+            const websiteInput = document.getElementById('websiteInput').value;
+            const sourceDisplay = document.getElementById('sourceDisplay');
+            const copyButton = document.getElementById('copyButton');
+            
+            if (websiteInput) {
+                try {
+                    const url = `https://api.goonlinetools.com/api/extract-source-code?url=${encodeURIComponent(websiteInput)}`;
+                    
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'x-api-key': 'waxkuSob76Pm3XsLRedipZuJuOVW3wGbQAXutyoO'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`An Error Occurred. Error Code: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data.sourceCode) {
+                        sourceDisplay.textContent = data.sourceCode;
+                        copyButton.style.display = 'block';
+                    } else {
+                        sourceDisplay.textContent = 'Failed to fetch the website source.';
+                        copyButton.style.display = 'none';
+                    }
+                } catch (error) {
+                    sourceDisplay.textContent = error.message;
+                    copyButton.style.display = 'none';
+                }
+            } else {
+                alert('Please enter a website URL.');
+            }
+        }
+
+        function copySource() {
+            const sourceDisplay = document.getElementById('sourceDisplay');
+            navigator.clipboard.writeText(sourceDisplay.textContent).then(() => {
+                alert('Source code copied to clipboard.');
+            }).catch(err => {
+                alert('Failed to copy: ', err);
+            });
+        }
+    </script>
+</body>
+</hqtml>
